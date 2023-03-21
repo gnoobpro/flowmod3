@@ -1,0 +1,50 @@
+Contract
+
+pub contract MyContract {
+    pub struct Person {
+        pub var nane: String
+        pub var age: UInt32
+        
+        init (name : String, age: UInt32) {
+            self.nane = name
+            self.age = age
+        }
+    }
+
+    pub var people: {String: Person}
+    
+    init() {
+        self.people = {}
+    }
+
+    pub fun addPerson(_name: String, _age: UInt32) {
+        let person = Person(name: _name, age: _age)
+        self.people[_name] = person
+    }
+    
+    pub fun getPerson(_name: String) : Person {
+        return self.people[_name]!
+    }
+}
+`
+Transaction
+
+import MyContract from 0x01
+
+transaction (_name : String, _age: UInt32) {
+
+  prepare(acct: AuthAccount) {}
+
+  execute {
+    MyContract.addPerson(_name: _name, _age: _age)
+  }
+}
+`
+
+Script
+
+import MyContract from 0x01
+
+pub fun main(_name : String): MyContract.Person {
+  return MyContract.getPerson(_name: _name)
+}
